@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: storm-starter
+Implementation-Version: 1.0.1
+Built-By: paride
+Specification-Vendor: The Apache Software Foundation
+Specification-Title: storm-starter
+Implementation-Vendor-Id: TestWordCountJP
+Build-Jdk: 1.8.0_91
+Specification-Version: 1.0.1
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: The Apache Software Foundation
+
