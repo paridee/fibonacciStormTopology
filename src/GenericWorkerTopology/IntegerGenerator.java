@@ -1,7 +1,7 @@
 package GenericWorkerTopology;
 
 public class IntegerGenerator {
-	public static int basevalue	=	35;
+	public static int basevalue	=	31;
 	public static int delta		=	5;
 	
 	public static int generateValue(){
