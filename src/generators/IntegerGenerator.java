@@ -1,5 +1,7 @@
 package generators;
 
-public interface IntegerGenerator {
+import java.io.Serializable;
+
+public interface IntegerGenerator extends Serializable {
 	 int generateValue();
 }

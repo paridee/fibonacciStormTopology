@@ -3,6 +3,10 @@ package generators;
 import java.util.Date;
 
 public class DynamicIntegerGenerator implements IntegerGenerator {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -833245102177635663L;
 	public int[] basevalue;
 	public int[] delta;
 			
