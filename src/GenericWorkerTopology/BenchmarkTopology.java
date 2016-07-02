@@ -93,9 +93,9 @@ public class BenchmarkTopology {
   	   	  	conf.setNumWorkers(1);
   	   	  	conf.setMaxSpoutPending(5000);
 
-  		    builder.setBolt("firststage", new IntermediateWorker(gen2), 32).shuffleGrouping("spout");
-  		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 32).shuffleGrouping("spout");
-  		    builder.setBolt("thirdstage", new FinalWorker(), 32).shuffleGrouping("secondstage");
+  		    builder.setBolt("firststage", new IntermediateWorker(gen2), 1).shuffleGrouping("spout").setNumTasks(32);
+  		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 1).shuffleGrouping("firststage").setNumTasks(32);
+  		    builder.setBolt("thirdstage", new FinalWorker(), 1).shuffleGrouping("secondstage").setNumTasks(32);
   	   	  	StormSubmitter.submitTopology(args[0]+"", conf, builder.createTopology());
 	    }
 	    else {
