@@ -15,17 +15,24 @@ import org.apache.storm.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import generators.IntegerGenerator;
+import generators.StaticIntegerGenerator;
+
 public class WorkTimeDynamicSpout extends BaseRichSpout {
-    private static final Logger LOG = LoggerFactory.getLogger(WorkTimeDynamicSpout.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6983495317915896224L;
+	private static final Logger LOG = LoggerFactory.getLogger(WorkTimeDynamicSpout.class);
     private SpoutOutputCollector collector;
     private long msgId = 0;
-    private int maxValue;
     private int[] intervals;
+    IntegerGenerator generator;
     
-    public WorkTimeDynamicSpout(int maxValue,int[] genInterval){
+    public WorkTimeDynamicSpout(int[] genInterval,IntegerGenerator generator){
     	super();
-    	this.maxValue		=	maxValue;
     	this.intervals		=	genInterval;
+    	this.generator		=	generator;
     }
     
 	@Override
@@ -45,7 +52,7 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
 		double sleepVal	=	begin+((((double)(minutesNow))/60)*((double)(end-begin)));
         //LOG.info("Current time is ");
 		Utils.sleep((int)sleepVal);
-        collector.emit(new Values(IntegerGenerator.generateValue(), System.currentTimeMillis() - (24 * 60 * 60 * 1000), ++msgId), msgId);
+        collector.emit(new Values(this.generator.generateValue(), System.currentTimeMillis() - (24 * 60 * 60 * 1000), ++msgId), msgId);
 	}
 
 	@Override

@@ -9,13 +9,15 @@ import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import generators.IntegerGenerator;
+
 public class IntermediateWorker extends BaseBasicBolt {
 	private static final Logger LOG = LoggerFactory.getLogger(IntermediateWorker.class);
-	private int maxValue;
+	private IntegerGenerator generator;
 	
-	public IntermediateWorker(int maxValue){
+	public IntermediateWorker(IntegerGenerator generator){
 		super();
-		this.maxValue	=	maxValue;
+		this.generator	=	generator;
 	}
 	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
@@ -25,7 +27,7 @@ public class IntermediateWorker extends BaseBasicBolt {
 		Long res	=	fibonacci(intFib); 
 		start		=	System.currentTimeMillis()	-	start;
 		LOG.info("### ---> Elaboration finished "+res+" in "+start+" ms");
-		collector.emit(new Values(IntegerGenerator.generateValue()));
+		collector.emit(new Values(this.generator.generateValue()));
 	}
 
 	@Override

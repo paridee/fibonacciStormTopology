@@ -14,17 +14,22 @@ import org.apache.storm.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import generators.IntegerGenerator;
+import generators.StaticIntegerGenerator;
+
 public class WorkTimeSpout extends BaseRichSpout {
     private static final Logger LOG = LoggerFactory.getLogger(WorkTimeSpout.class);
     private SpoutOutputCollector collector;
     private long msgId = 0;
     private int maxValue;
     private int genInterval;
+    IntegerGenerator gen;
     
-    public WorkTimeSpout(int maxValue,int genInterval){
+    public WorkTimeSpout(int maxValue,int genInterval,IntegerGenerator gen){
     	super();
     	this.maxValue		=	maxValue;
     	this.genInterval	=	genInterval;
+    	this.gen			=	gen;
     }
     
 	@Override
@@ -36,7 +41,7 @@ public class WorkTimeSpout extends BaseRichSpout {
 	public void nextTuple() {
 		// TODO Auto-generated method stub
         Utils.sleep(genInterval);
-        collector.emit(new Values(IntegerGenerator.generateValue(), System.currentTimeMillis() - (24 * 60 * 60 * 1000), ++msgId), msgId);
+        collector.emit(new Values(gen.generateValue(), System.currentTimeMillis() - (24 * 60 * 60 * 1000), ++msgId), msgId);
 	}
 
 	@Override
