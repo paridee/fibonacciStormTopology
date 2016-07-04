@@ -50,9 +50,9 @@ public class BenchmarkTopology {
 
 	   	  	int[] deltas1	=	new int[4];
 	   	  	deltas1[0]			=	2;
-	   	  	deltas1[0]			=	2;
-	   	  	deltas1[0]			=	2;
-	   	  	deltas1[0]			=	2;
+	   	  	deltas1[1]			=	2;
+	   	  	deltas1[2]			=	2;
+	   	  	deltas1[3]			=	2;
 	   	  	
 	   	  	int[] basev1		=	new int[4];
 	   	  	basev1[0]			=	33;
@@ -62,9 +62,9 @@ public class BenchmarkTopology {
 	   	  	
 	   	  	int[] deltas2	=	new int[4];
 	   	  	deltas2[0]			=	2;
-	   	  	deltas2[0]			=	2;
-	   	  	deltas2[0]			=	2;
-	   	  	deltas2[0]			=	2;
+	   	  	deltas2[1]			=	2;
+	   	  	deltas2[2]			=	2;
+	   	  	deltas2[3]			=	2;
 	   	  	
 	   	  	int[] basev2		=	new int[4];
 	   	  	basev2[0]			=	31;
@@ -74,9 +74,9 @@ public class BenchmarkTopology {
 	   	  	
 	   	  	int[] deltas3	=	new int[4];
 	   	  	deltas3[0]			=	2;
-	   	  	deltas3[0]			=	2;
-	   	  	deltas3[0]			=	2;
-	   	  	deltas3[0]			=	2;
+	   	  	deltas3[1]			=	2;
+	   	  	deltas3[2]			=	2;
+	   	  	deltas3[3]			=	2;
 	   	  	
 	   	  	int[] basev3		=	new int[4];
 	   	  	basev3[0]			=	34;

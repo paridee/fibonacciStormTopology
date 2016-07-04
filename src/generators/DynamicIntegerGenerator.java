@@ -32,7 +32,6 @@ public class DynamicIntegerGenerator implements IntegerGenerator {
 	}
 
 
-	@Override
 	public int getBase() {		
 		if(basevalue.length>3){
 			@SuppressWarnings("deprecation")
@@ -44,7 +43,6 @@ public class DynamicIntegerGenerator implements IntegerGenerator {
 	}
 
 
-	@Override
 	public int getDelta() {
 		if(delta.length>3){
 			@SuppressWarnings("deprecation")
