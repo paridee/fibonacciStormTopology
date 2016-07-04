@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
+import org.apache.storm.metric.api.AssignableMetric;
 import org.apache.storm.spout.SpoutOutputCollector;
+import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichSpout;
@@ -22,6 +24,7 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
     /**
 	 * 
 	 */
+	private transient AssignableMetric sleepTime	=	null;
 	private static final long serialVersionUID = 6983495317915896224L;
 	private static final Logger LOG = LoggerFactory.getLogger(WorkTimeDynamicSpout.class);
     private SpoutOutputCollector collector;
@@ -38,6 +41,10 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
 	@Override
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
 		this.collector = collector;
+		if(this.sleepTime==null){
+			this.sleepTime	=	new AssignableMetric(0.0);
+			context.registerMetric("spout_generation_interval", this.sleepTime, 60);
+		}
 	}
 
 	@Override
@@ -50,6 +57,7 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
 		double begin	=	intervals[hourNow];
 		double end		=	intervals[(hourNow+1)%24];
 		double sleepVal	=	begin+((((double)(minutesNow))/60)*((double)(end-begin)));
+		this.sleepTime.setValue(sleepVal);
         //LOG.info("Current time is ");
 		Utils.sleep((int)sleepVal);
         collector.emit(new Values(this.generator.generateValue(), System.currentTimeMillis() - (24 * 60 * 60 * 1000), ++msgId), msgId);
@@ -70,4 +78,5 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
         LOG.debug("Got FAIL for msgId : " + msgId);
     }
 
+    
 }
