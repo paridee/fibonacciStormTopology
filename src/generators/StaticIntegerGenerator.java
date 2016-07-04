@@ -18,4 +18,15 @@ public class StaticIntegerGenerator implements IntegerGenerator {
 		int value	=	(int)((Math.random()*delta)+basevalue);
 		return value;
 	}
+
+	@Override
+	public int getBase() {
+		return this.basevalue;
+	}
+
+	@Override
+	public int getDelta() {
+		// TODO Auto-generated method stub
+		return this.delta;
+	}
 }

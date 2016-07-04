@@ -24,7 +24,10 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
     /**
 	 * 
 	 */
-	private transient AssignableMetric sleepTime	=	null;
+	private transient AssignableMetric sleepTime		=	null;
+	private transient AssignableMetric fibonacciBase	=	null;
+	private transient AssignableMetric fibonacciDelta	=	null;
+	
 	private static final long serialVersionUID = 6983495317915896224L;
 	private static final Logger LOG = LoggerFactory.getLogger(WorkTimeDynamicSpout.class);
     private SpoutOutputCollector collector;
@@ -42,8 +45,12 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
 		this.collector = collector;
 		if(this.sleepTime==null){
-			this.sleepTime	=	new AssignableMetric(0.0);
+			this.sleepTime		=	new AssignableMetric(0.0);
 			context.registerMetric("spout_generation_interval", this.sleepTime, 60);
+			this.fibonacciBase	=	new AssignableMetric(0);
+			context.registerMetric("fibonacci_base_value", this.fibonacciBase, 60);
+			this.fibonacciDelta	=	new AssignableMetric(0);
+			context.registerMetric("fibonacci_delta_value", this.fibonacciDelta, 60);
 		}
 	}
 
@@ -58,6 +65,8 @@ public class WorkTimeDynamicSpout extends BaseRichSpout {
 		double end		=	intervals[(hourNow+1)%24];
 		double sleepVal	=	begin+((((double)(minutesNow))/60)*((double)(end-begin)));
 		this.sleepTime.setValue(sleepVal);
+		this.fibonacciBase.setValue(this.generator.getBase());
+		this.fibonacciDelta.setValue(this.generator.getDelta());
         //LOG.info("Current time is ");
 		Utils.sleep((int)sleepVal);
         collector.emit(new Values(this.generator.generateValue(), System.currentTimeMillis() - (24 * 60 * 60 * 1000), ++msgId), msgId);
