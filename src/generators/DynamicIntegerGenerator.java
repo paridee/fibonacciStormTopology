@@ -35,12 +35,10 @@ public class DynamicIntegerGenerator implements IntegerGenerator {
 	@Override
 	public int getBase() {		
 		if(basevalue.length>3){
-			if(delta.length>3){
-				@SuppressWarnings("deprecation")
-				int hnow	=	(new Date()).getHours();
-				int aValue	=	basevalue[hnow/6];
-				return aValue;
-			}
+			@SuppressWarnings("deprecation")
+			int hnow	=	(new Date()).getHours();
+			int aValue	=	basevalue[hnow/6];
+			return aValue;
 		}
 		return 0;
 	}
@@ -48,15 +46,13 @@ public class DynamicIntegerGenerator implements IntegerGenerator {
 
 	@Override
 	public int getDelta() {
-		if(basevalue.length>3){
-			if(delta.length>3){
-				@SuppressWarnings("deprecation")
-				int hnow	=	(new Date()).getHours();
-				int aValue	=	this.delta[hnow/6];
-				return aValue;
-			}
+		if(delta.length>3){
+			@SuppressWarnings("deprecation")
+			int hnow	=	(new Date()).getHours();
+			int aValue	=	this.delta[hnow/6];
+			return aValue;
 		}
-		return 0;
+		return -1;
 	}
 
 }
