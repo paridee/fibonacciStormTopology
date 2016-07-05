@@ -65,8 +65,11 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 else if(innerValue instanceof Double){
 						 gaugeValue	=	((Double)innerValue);
 					 }
+					 String[] labelNames	=	new String[1];
+					 labelNames[0]			=	"topology";
 					 Gauge duration = Gauge.build()
 						     .name(metricName)
+						     .labelNames(labelNames)
 						     .help(metricName)
 						     .register(registry);
 						 duration.set(gaugeValue); 
