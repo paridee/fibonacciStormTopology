@@ -33,6 +33,8 @@ public class PrometheusConsumer implements IMetricsConsumer {
 
 	}
 
+
+
 	@Override
 	public void handleDataPoints(TaskInfo arg0, Collection<DataPoint> arg1) {
 		// TODO Auto-generated method stub
@@ -55,7 +57,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 //if(metricName.length()>=30){
 						// metricName	=   metricName.substring(0, 30);
 					 //}
-					 Double gaugeValue	=	-1.0;
+					 double gaugeValue	=	-1;
 					 if(innerValue instanceof Long){
 						 gaugeValue	=	((Long)innerValue).doubleValue();
 					 }
@@ -65,30 +67,15 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 else if(innerValue instanceof Double){
 						 gaugeValue	=	((Double)innerValue);
 					 }
-					 else{
-						 gaugeValue	=	-1.0;
-					 }
 					 String[] labelNames	=	new String[1];
 					 labelNames[0]			=	"topology";
-					 if((metricName!=null)&&(labelNames!=null)&&(registry!=null)){
-						 Gauge duration = Gauge.build()
-							     .name(metricName)
-							     .labelNames(labelNames)
-							     .help(metricName)
-							     .register(registry);
-						 if(duration!=null){
-							 if(gaugeValue!=null){
-								 try{
-									 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString());
-							 		LOG.info("TEST SONDA "+metricName+" "+gaugeValue);
-							 		duration.set(gaugeValue); 
-								 }
-								 catch(Exception e){
-									 LOG.debug("EXCEPTION CHECK "+e.getMessage());
-								 }
-							 }
-						 }
-					 }
+					 Gauge duration = Gauge.build()
+						     .name(metricName)
+						     .labelNames(labelNames)
+						     .help(metricName)
+						     .register(registry);
+						 duration.set(gaugeValue); 
+						 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString());
 				 }
 			 }
 			 String metricName	=	dp.name;
@@ -135,8 +122,8 @@ public class PrometheusConsumer implements IMetricsConsumer {
 		}
 		LOG.info("############SONDA!!! sent to prometheus");
 	
-	}
-
+}
+	
 	@Override
 	public void prepare(Map arg0, Object arg1, TopologyContext arg2, IErrorReporter arg3) {
 		/* TODO Auto-generated method stub
