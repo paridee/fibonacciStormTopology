@@ -24,8 +24,8 @@ import io.prometheus.client.exporter.PushGateway;
 
 public class PrometheusConsumer implements IMetricsConsumer {
     private static final Logger LOG 	= 	LoggerFactory.getLogger(PrometheusConsumer.class);
+    //private static final String PROMURL	=	"160.80.97.147:9091";
     private static final String PROMURL	=	"10.0.0.1:9091";
-    
     
     //private static final CollectorRegistry registry = new CollectorRegistry(); 
 	@Override
@@ -40,10 +40,6 @@ public class PrometheusConsumer implements IMetricsConsumer {
 	public void handleDataPoints(TaskInfo arg0, Collection<DataPoint> arg1) {
 		Config conf 	= 	new Config();
 		String topName	=	(String) conf.get(Config.TOPOLOGY_NAME);
-		String[] topFeat	=	new String[1];
-		topFeat[0]	=	topName;
-		 String[] labelNames	=	new String[1];
-		 labelNames[0]			=	"topology";
 		// TODO Auto-generated method stub
 		 CollectorRegistry registry = new CollectorRegistry();
 		 LOG.info("SONDA-PRE "+arg0.srcComponentId+" "+arg0.srcTaskId+" "+arg0.srcWorkerHost+" "+arg0.srcWorkerPort+" "+arg0.timestamp+" "+arg0.updateIntervalSecs);
@@ -75,6 +71,10 @@ public class PrometheusConsumer implements IMetricsConsumer {
 						 gaugeValue	=	((Double)innerValue);
 					 }
 					 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString()+" innervalue type "+innerValue.getClass());
+					String[] topFeat	=	new String[1];
+					topFeat[0]	=	topName+"";
+					String[] labelNames	=	new String[1];
+					labelNames[0]			=	"topology";
 					 Gauge duration = Gauge.build()
 						     .name(metricName)
 						     .help(metricName)
@@ -83,9 +83,8 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 
 					 Gauge.Child gaugeChild	=	new Gauge.Child();
 					 gaugeChild.set(gaugeValue);
-					 duration.setChild(gaugeChild, topFeat);
+					 duration.setChild(gaugeChild, topFeat);				 
 					 LOG.info("SONDA-INSIDE-INSIDE checkup "+gaugeValue+" "+duration.toString()+" "+registry.toString());
-						 duration.set(gaugeValue); 
 						
 				 }
 			 }
@@ -93,6 +92,10 @@ public class PrometheusConsumer implements IMetricsConsumer {
 			 metricName	=	metricName.replace('-', '_');
 			 metricName	=	metricName.replace('/', '_');
 			 if(dp.value instanceof Double){
+					String[] topFeat	=	new String[1];
+					topFeat[0]	=	topName+"";
+					String[] labelNames	=	new String[1];
+					labelNames[0]			=	"topology";
 				 Gauge duration = Gauge.build()
 					     .name(metricName)
 					     .help(metricName)
@@ -105,6 +108,10 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 LOG.info("SONDA-INSIDE-ELSE gauge name "+"storm_"+dp.name);
 			 }
 			 else if(dp.value instanceof Long){
+					String[] topFeat	=	new String[1];
+					topFeat[0]	=	topName+"";
+					String[] labelNames	=	new String[1];
+					labelNames[0]			=	"topology";
 				 Gauge duration = Gauge.build()
 					     .name(metricName)
 					     .help(metricName)
@@ -116,6 +123,10 @@ public class PrometheusConsumer implements IMetricsConsumer {
 				 duration.setChild(gaugeChild, topFeat);
 			 }
 			 else if(dp.value instanceof Integer){
+					String[] topFeat	=	new String[1];
+					topFeat[0]	=	topName+"";
+					String[] labelNames	=	new String[1];
+					labelNames[0]			=	"topology";
 				 Gauge duration = Gauge.build()
 					     .name(metricName)
 					     .help(metricName)
@@ -133,7 +144,8 @@ public class PrometheusConsumer implements IMetricsConsumer {
 
 		   PushGateway pg = new PushGateway(PROMURL);
 		   try {
-			pg.pushAdd(registry, "stormMetrics",arg0.srcComponentId+"_"+arg0.srcTaskId+"_"+arg0.srcWorkerHost+"_"+arg0.srcWorkerPort);
+			   pg.pushAdd(registry, "stormMetrics");
+			//pg.pushAdd(registry, "stormMetrics",arg0.srcComponentId+"_"+arg0.srcTaskId+"_"+arg0.srcWorkerHost+"_"+arg0.srcWorkerPort);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			LOG.warn("SONDA######"+e.getMessage());
