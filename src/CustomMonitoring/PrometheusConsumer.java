@@ -5,6 +5,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.apache.storm.Config;
 import org.apache.storm.metric.api.IMetricsConsumer;
@@ -24,8 +34,9 @@ import io.prometheus.client.exporter.PushGateway;
 
 public class PrometheusConsumer implements IMetricsConsumer {
     private static final Logger LOG 	= 	LoggerFactory.getLogger(PrometheusConsumer.class);
-    private static final String PROMURL	=	"160.80.97.147:9091";
-    //private static final String PROMURL	=	"10.0.0.1:9091";
+    //private static final String PROMURL	=	"160.80.97.147:9091";
+    private static final String PROMURL	=	"10.0.0.1:9091";
+    HashMap<String,Gauge> gauges	=	new HashMap<String,Gauge>();
     
     //private static final CollectorRegistry registry = new CollectorRegistry(); 
 	@Override
@@ -33,6 +44,42 @@ public class PrometheusConsumer implements IMetricsConsumer {
 		// TODO Auto-generated method stub
 
 	}
+	
+	
+	public static void sendEmail(String text,String obj,String address){
+	    Properties props = new Properties();
+	    props.put("mail.smtp.host", "secure.alien8.it");
+	    props.put("mail.smtp.socketFactory.port", "465");
+	    props.put("mail.smtp.socketFactory.class",
+	            "javax.net.ssl.SSLSocketFactory");
+	    props.put("mail.smtp.auth", "true");
+	    props.put("mail.smtp.port", "465"); 
+	    Session session = Session.getDefaultInstance(props,
+	        new javax.mail.Authenticator() {
+	                            @Override
+	            protected PasswordAuthentication getPasswordAuthentication() {
+	                return new PasswordAuthentication("noreply@eclshop.tv","193ofQf279");
+	            }
+	        });
+
+	    try {
+
+	        Message message = new MimeMessage(session);
+	        Address anAddr	=	new InternetAddress("noreply@eclshop.tv");
+	        message.setFrom(anAddr);
+	        message.setRecipients(Message.RecipientType.TO,
+	                InternetAddress.parse(address));
+	        message.setSubject(obj);
+	        message.setText(text);
+	        
+	        Transport.send(message);
+
+	        System.out.println("Sending result, done.");
+
+	    } catch (MessagingException e) {
+	        throw new RuntimeException(e);
+	    }
+}
 
 
 
@@ -41,7 +88,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 		Config conf 	= 	new Config();
 		String topName	=	(String) conf.get(Config.TOPOLOGY_NAME);
 		// TODO Auto-generated method stub
-		 CollectorRegistry registry = new CollectorRegistry();
+		 CollectorRegistry registry = CollectorRegistry.defaultRegistry;
 		 LOG.info("SONDA-PRE "+arg0.srcComponentId+" "+arg0.srcTaskId+" "+arg0.srcWorkerHost+" "+arg0.srcWorkerPort+" "+arg0.timestamp+" "+arg0.updateIntervalSecs);
 		 LOG.info("SONDA-PRE2 "+arg1.size());
 		 Iterator<DataPoint> it	=	arg1.iterator();
@@ -57,6 +104,12 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 String metricName	=	"_storm_"+dp.name+"_"+innerKey.toString();
 					 metricName	=	metricName.replace('-', '_');
 					 metricName	=	metricName.replace('/', '_');
+					 
+					 
+					 //TODO remove test
+					 if(metricName.equals("_storm___complete_latency_default")){
+						 this.sendEmail("trovata metrica "+metricName+" "+innerValue, "TROVATA", "paride.casulli@gmail.com");
+					 }
 					 //if(metricName.length()>=30){
 						// metricName	=   metricName.substring(0, 30);
 					 //}
@@ -75,12 +128,20 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					topFeat[0]	=	topName+"";
 					String[] labelNames	=	new String[1];
 					labelNames[0]			=	"topology";
-					 Gauge duration = Gauge.build()
-						     .name(metricName)
-						     .help(metricName)
-						     .labelNames(labelNames)
-						     .register(registry);
-					 
+					Gauge duration	=	null;
+					if(this.gauges.containsKey(metricName)){
+						duration	=	this.gauges.get(metricName);
+					}
+					else{
+						 duration = Gauge.build()
+							     .name(metricName)
+							     .help(metricName)
+							     .labelNames(labelNames)
+							     .register(registry);
+						 this.gauges.put(metricName, duration);
+					}
+					
+					
 					 Gauge.Child gaugeChild	=	new Gauge.Child();
 					 gaugeChild.set(gaugeValue);
 					 duration.setChild(gaugeChild, topFeat);				 
@@ -91,16 +152,27 @@ public class PrometheusConsumer implements IMetricsConsumer {
 			 String metricName	=	dp.name;
 			 metricName	=	metricName.replace('-', '_');
 			 metricName	=	metricName.replace('/', '_');
+			 if(metricName.equals("_storm___complete_latency_default")){
+				 this.sendEmail("trovata metrica "+metricName+" "+dp.value, "TROVATA", "paride.casulli@gmail.com");
+			 }
 			 if(dp.value instanceof Double){
 					String[] topFeat	=	new String[1];
 					topFeat[0]	=	topName+"";
 					String[] labelNames	=	new String[1];
 					labelNames[0]			=	"topology";
-				 Gauge duration = Gauge.build()
-					     .name(metricName)
-					     .help(metricName)
-					     .labelNames(labelNames)
-					     .register(registry);
+					Gauge duration	=	null;
+					if(this.gauges.containsKey(metricName)){
+						duration	=	this.gauges.get(metricName);
+					}
+					else{
+						 duration = Gauge.build()
+							     .name(metricName)
+							     .help(metricName)
+							     .labelNames(labelNames)
+							     .register(registry);
+						 this.gauges.put(metricName, duration);
+					}
+					
 				 
 				 Gauge.Child gaugeChild	=	new Gauge.Child();
 				 gaugeChild.set((double)dp.value);
@@ -112,12 +184,19 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					topFeat[0]	=	topName+"";
 					String[] labelNames	=	new String[1];
 					labelNames[0]			=	"topology";
-				 Gauge duration = Gauge.build()
-					     .name(metricName)
-					     .help(metricName)
-					     .labelNames(labelNames)
-					     .register(registry);
-				 
+					Gauge duration	=	null;
+					if(this.gauges.containsKey(metricName)){
+						duration	=	this.gauges.get(metricName);
+					}
+					else{
+						 duration = Gauge.build()
+							     .name(metricName)
+							     .help(metricName)
+							     .labelNames(labelNames)
+							     .register(registry);
+						 this.gauges.put(metricName, duration);
+					}
+					
 				 Gauge.Child gaugeChild	=	new Gauge.Child();
 				 gaugeChild.set(((Long)dp.value).doubleValue());
 				 duration.setChild(gaugeChild, topFeat);
@@ -127,12 +206,19 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					topFeat[0]	=	topName+"";
 					String[] labelNames	=	new String[1];
 					labelNames[0]			=	"topology";
-				 Gauge duration = Gauge.build()
-					     .name(metricName)
-					     .help(metricName)
-					     .labelNames(labelNames)
-					     .register(registry);
-				 
+					Gauge duration	=	null;
+					if(this.gauges.containsKey(metricName)){
+						duration	=	this.gauges.get(metricName);
+					}
+					else{
+						 duration = Gauge.build()
+							     .name(metricName)
+							     .help(metricName)
+							     .labelNames(labelNames)
+							     .register(registry);
+						 this.gauges.put(metricName, duration);
+					}
+					
 				 Gauge.Child gaugeChild	=	new Gauge.Child();
 				 gaugeChild.set(((Integer)dp.value).doubleValue());
 				 duration.setChild(gaugeChild, topFeat);
@@ -154,6 +240,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 		LOG.info("############SONDA!!! sent to prometheus ");
 	
 }
+
 	
 	@Override
 	public void prepare(Map arg0, Object arg1, TopologyContext arg2, IErrorReporter arg3) {
