@@ -65,6 +65,9 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 else if(innerValue instanceof Double){
 						 gaugeValue	=	((Double)innerValue);
 					 }
+					 else{
+						 gaugeValue	=	-1;
+					 }
 					 String[] labelNames	=	new String[1];
 					 labelNames[0]			=	"topology";
 					 Gauge duration = Gauge.build()
