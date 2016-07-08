@@ -230,11 +230,12 @@ public class PrometheusConsumer implements IMetricsConsumer {
 
 		   PushGateway pg = new PushGateway(PROMURL);
 		   try {
-			   pg.pushAdd(registry, "stormMetrics");
-			//pg.pushAdd(registry, "stormMetrics",arg0.srcComponentId+"_"+arg0.srcTaskId+"_"+arg0.srcWorkerHost+"_"+arg0.srcWorkerPort);
+			   //pg.pushAdd(registry, "stormMetrics");
+			pg.pushAdd(registry, "stormMetrics",arg0.srcComponentId+"_"+arg0.srcTaskId+"_"+arg0.srcWorkerHost+"_"+arg0.srcWorkerPort);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			LOG.warn("SONDA######"+e.getMessage());
+			this.sendEmail(e.getMessage(),"EXCEPTION", "paride.casulli@gmail.com");
 			//e.printStackTrace();
 		}
 		LOG.info("############SONDA!!! sent to prometheus ");
