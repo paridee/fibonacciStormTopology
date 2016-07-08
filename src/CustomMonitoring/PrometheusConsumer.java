@@ -55,7 +55,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 //if(metricName.length()>=30){
 						// metricName	=   metricName.substring(0, 30);
 					 //}
-					 double gaugeValue	=	-1;
+					 Double gaugeValue	=	-1.0;
 					 if(innerValue instanceof Long){
 						 gaugeValue	=	((Long)innerValue).doubleValue();
 					 }
@@ -66,7 +66,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 						 gaugeValue	=	((Double)innerValue);
 					 }
 					 else{
-						 gaugeValue	=	-1;
+						 gaugeValue	=	-1.0;
 					 }
 					 String[] labelNames	=	new String[1];
 					 labelNames[0]			=	"topology";
@@ -77,9 +77,11 @@ public class PrometheusConsumer implements IMetricsConsumer {
 							     .help(metricName)
 							     .register(registry);
 						 if(duration!=null){
-							 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString());
-							 LOG.info("TEST SONDA "+metricName+" "+gaugeValue);
-							 duration.set(gaugeValue); 
+							 if(gaugeValue!=null){
+								LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString());
+							 	LOG.info("TEST SONDA "+metricName+" "+gaugeValue);
+							 	duration.set(gaugeValue); 
+							 }
 						 }
 					 }
 				 }
