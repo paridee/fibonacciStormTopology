@@ -99,7 +99,7 @@ public class BenchmarkTopology {
   	   	  	StormSubmitter.submitTopology(args[0]+"", conf, builder.createTopology());
 	    }
 	    else {
-  	   	  	builder.setSpout("spout", new WorkTimeDynamicSpout(intervals,gen1), 1);
+  	   	  	//builder.setSpout("spout", new WorkTimeDynamicSpout(intervals,gen1), 1);
   		    builder.setBolt("firststage", new IntermediateWorker(gen2), 32).shuffleGrouping("spout");
   		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 32).shuffleGrouping("firststage");
   		    builder.setBolt("thirdstage", new FinalWorker(), 32).shuffleGrouping("secondstage");
