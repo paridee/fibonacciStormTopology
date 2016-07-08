@@ -20,7 +20,7 @@ public class BenchmarkTopology {
 	    TopologyBuilder builder = new TopologyBuilder();
 	    Config conf = new Config();
 	    conf.setDebug(true);
-	    conf.registerMetricsConsumer(PrometheusConsumer.class,1);
+	    conf.registerMetricsConsumer(PrometheusConsumer.class,4);
 	    
 	   	  	int[] intervals	=	new int[24];
 	   	  	intervals[0]	=	60;
