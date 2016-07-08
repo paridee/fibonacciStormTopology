@@ -77,13 +77,9 @@ public class PrometheusConsumer implements IMetricsConsumer {
 							     .help(metricName)
 							     .register(registry);
 						 if(duration!=null){
-							 try{
 							 duration.set(gaugeValue); 
 							 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString());
-							 }
-							 catch(Exception e){
-								 LOG.debug(e.getMessage());
-							 }
+							 LOG.info("TEST SONDA "+metricName+" "+gaugeValue);
 						 }
 					 }
 				 }
