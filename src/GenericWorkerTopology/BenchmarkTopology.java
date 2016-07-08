@@ -100,9 +100,9 @@ public class BenchmarkTopology {
 	    }
 	    else {
   	   	  	//builder.setSpout("spout", new WorkTimeDynamicSpout(intervals,gen1), 1);
-  		    builder.setBolt("firststage", new IntermediateWorker(gen2), 32).shuffleGrouping("spout");
-  		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 32).shuffleGrouping("firststage");
-  		    builder.setBolt("thirdstage", new FinalWorker(), 32).shuffleGrouping("secondstage");
+  		    builder.setBolt("firststage", new IntermediateWorker(gen2), 1).shuffleGrouping("spout");
+  		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 1).shuffleGrouping("firststage");
+  		    builder.setBolt("thirdstage", new FinalWorker(), 1).shuffleGrouping("secondstage");
 	      conf.setMaxTaskParallelism(3);
 	      LocalCluster cluster = new LocalCluster();
 	      cluster.submitTopology("word-count", conf, builder.createTopology());
