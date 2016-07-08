@@ -24,8 +24,8 @@ import io.prometheus.client.exporter.PushGateway;
 
 public class PrometheusConsumer implements IMetricsConsumer {
     private static final Logger LOG 	= 	LoggerFactory.getLogger(PrometheusConsumer.class);
-    //private static final String PROMURL	=	"160.80.97.147:9091";
-    private static final String PROMURL	=	"10.0.0.1:9091";
+    private static final String PROMURL	=	"160.80.97.147:9091";
+    //private static final String PROMURL	=	"10.0.0.1:9091";
     
     //private static final CollectorRegistry registry = new CollectorRegistry(); 
 	@Override
