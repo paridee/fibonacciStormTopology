@@ -139,7 +139,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 			LOG.warn("SONDA######"+e.getMessage());
 			//e.printStackTrace();
 		}
-		LOG.info("############SONDA!!! sent to prometheus");
+		LOG.info("############SONDA!!! sent to prometheus ");
 	
 }
 	
