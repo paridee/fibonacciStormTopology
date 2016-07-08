@@ -70,13 +70,15 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 }
 					 String[] labelNames	=	new String[1];
 					 labelNames[0]			=	"topology";
-					 Gauge duration = Gauge.build()
-						     .name(metricName)
-						     .labelNames(labelNames)
-						     .help(metricName)
-						     .register(registry);
-						 duration.set(gaugeValue); 
-						 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString());
+					 if((metricName!=null)&&(labelNames!=null)&&(registry!=null)){
+						 Gauge duration = Gauge.build()
+							     .name(metricName)
+							     .labelNames(labelNames)
+							     .help(metricName)
+							     .register(registry);
+							 duration.set(gaugeValue); 
+							 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString());
+					 }
 				 }
 			 }
 			 String metricName	=	dp.name;
