@@ -107,7 +107,7 @@ public class BenchmarkTopology {
 	      LocalCluster cluster = new LocalCluster();
 	      cluster.submitTopology("word-count", conf, builder.createTopology());
 
-	      Thread.sleep(300000);
+	      Thread.sleep(3600000);
 
 	      cluster.shutdown();
 	      }
