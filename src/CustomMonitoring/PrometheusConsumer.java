@@ -34,10 +34,10 @@ import io.prometheus.client.exporter.PushGateway;
 
 public class PrometheusConsumer implements IMetricsConsumer {
     private static final Logger LOG 	= 	LoggerFactory.getLogger(PrometheusConsumer.class);
-    private static final String PROMURL	=	"160.80.97.147:9091";
-    //private static final String PROMURL	=	"10.0.0.1:9091";
+    //private static final String PROMURL	=	"160.80.97.147:9091";
+    private static final String PROMURL	=	"10.0.0.1:9091";
     HashMap<String,Gauge> gauges	=	new HashMap<String,Gauge>();
-    
+    public static int sent = 0;
     //private static final CollectorRegistry registry = new CollectorRegistry(); 
 	@Override
 	public void cleanup() {
@@ -45,6 +45,31 @@ public class PrometheusConsumer implements IMetricsConsumer {
 
 	}
 	
+	public void sendTest(){
+		 CollectorRegistry registry = new CollectorRegistry();
+
+		 String[] labelNames	=	new String[1];
+		 labelNames[0]			=	"sonda";
+		 Gauge duration = Gauge.build()
+			     .name("prova")
+			     .help("test counter")
+			     .labelNames(labelNames)
+			     .register(registry);
+		 Gauge.Child gaugech	=	new Gauge.Child();
+		 String[] strings		=	new String[1];
+		 strings[0]			=	"pippo";
+		 gaugech.set((double)sent++);
+		 duration.setChild(gaugech, strings);
+		   PushGateway pg = new PushGateway(PROMURL);
+		   try {
+			pg.pushAdd(registry, "stormMetrics","test");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("SONDA######"+e.getMessage());
+			//e.printStackTrace();
+		}
+		   System.out.println("############SONDA!!! sent to prometheus");
+	}
 	
 	public static void sendEmail(String text,String obj,String address){
 	    Properties props = new Properties();
@@ -85,6 +110,9 @@ public class PrometheusConsumer implements IMetricsConsumer {
 
 	@Override
 	public void handleDataPoints(TaskInfo arg0, Collection<DataPoint> arg1) {
+		//TODO TEST
+		sendTest();
+		
 		Config conf 	= 	new Config();
 		String topName	=	(String) conf.get(Config.TOPOLOGY_NAME);
 		// TODO Auto-generated method stub
@@ -108,123 +136,121 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 
 					 //TODO remove test
 					 if(metricName.equals("_storm___complete_latency_default")){
-						 //this.sendEmail("trovata metrica "+metricName+" "+innerValue, "TROVATA", "paride.casulli@gmail.com");
-					 }
-					 //if(metricName.length()>=30){
-						// metricName	=   metricName.substring(0, 30);
-					 //}
-					 double gaugeValue	=	-1;
-					 if(innerValue instanceof Long){
-						 gaugeValue	=	((Long)innerValue).doubleValue();
-					 }
-					 else if(innerValue instanceof Integer){
-						 gaugeValue	=	((Integer)innerValue).doubleValue();
-					 }
-					 else if(innerValue instanceof Double){
-						 gaugeValue	=	((Double)innerValue);
-					 }
-					 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString()+" innervalue type "+innerValue.getClass());
-					String[] topFeat	=	new String[1];
-					topFeat[0]	=	topName+"";
-					String[] labelNames	=	new String[1];
-					labelNames[0]			=	"topology";
-					Gauge duration	=	null;
-					if(this.gauges.containsKey(metricName)){
-						duration	=	this.gauges.get(metricName);
-					}
-					else{
-						 duration = Gauge.build()
-							     .name(metricName)
-							     .help(metricName)
-							     .labelNames(labelNames)
-							     .register(registry);
-						 this.gauges.put(metricName, duration);
-					}
-					
-					
-					 Gauge.Child gaugeChild	=	new Gauge.Child();
-					 gaugeChild.set(gaugeValue);
-					 duration.setChild(gaugeChild, topFeat);				 
-					 LOG.info("SONDA-INSIDE-INSIDE checkup "+gaugeValue+" "+duration.toString()+" "+registry.toString());
+						 
+						 //if(metricName.length()>=30){
+							// metricName	=   metricName.substring(0, 30);
+						 //}
+						 double gaugeValue	=	-1;
+						 if(innerValue instanceof Long){
+							 gaugeValue	=	((Long)innerValue).doubleValue();
+						 }
+						 else if(innerValue instanceof Integer){
+							 gaugeValue	=	((Integer)innerValue).doubleValue();
+						 }
+						 else if(innerValue instanceof Double){
+							 gaugeValue	=	((Double)innerValue);
+						 }
+						 LOG.info("SONDA-INSIDE-INSIDE gauge name "+"storm_"+dp.name+"_"+innerKey.toString()+" innervalue type "+innerValue.getClass());
+						String[] topFeat	=	new String[1];
+						topFeat[0]	=	topName+"";
+						String[] labelNames	=	new String[1];
+						labelNames[0]			=	"topology";
+						Gauge duration	=	null;
+						if(this.gauges.containsKey(metricName)){
+							duration	=	this.gauges.get(metricName);
+						}
+						else{
+							 duration = Gauge.build()
+								     .name(metricName)
+								     .help(metricName)
+								     .labelNames(labelNames)
+								     .register(registry);
+							 this.gauges.put(metricName, duration);
+						}
 						
+						
+						 Gauge.Child gaugeChild	=	new Gauge.Child();
+						 gaugeChild.set(gaugeValue);
+						 duration.setChild(gaugeChild, topFeat);				 
+						 LOG.info("SONDA-INSIDE-INSIDE checkup "+gaugeValue+" "+duration.toString()+" "+registry.toString());
+						}
 				 }
 			 }
 			 String metricName	=	dp.name;
 			 metricName	=	metricName.replace('-', '_');
 			 metricName	=	metricName.replace('/', '_');
 			 if(metricName.equals("_storm___complete_latency_default")){
-				 //this.sendEmail("trovata metrica "+metricName+" "+dp.value, "TROVATA", "paride.casulli@gmail.com");
-			 }
-			 if(dp.value instanceof Double){
-					String[] topFeat	=	new String[1];
-					topFeat[0]	=	topName+"";
-					String[] labelNames	=	new String[1];
-					labelNames[0]			=	"topology";
-					Gauge duration	=	null;
-					if(this.gauges.containsKey(metricName)){
-						duration	=	this.gauges.get(metricName);
-					}
-					else{
-						 duration = Gauge.build()
-							     .name(metricName)
-							     .help(metricName)
-							     .labelNames(labelNames)
-							     .register(registry);
-						 this.gauges.put(metricName, duration);
-					}
-					
-				 
-				 Gauge.Child gaugeChild	=	new Gauge.Child();
-				 gaugeChild.set((double)dp.value);
-				 duration.setChild(gaugeChild, topFeat);
-					 LOG.info("SONDA-INSIDE-ELSE gauge name "+"storm_"+dp.name);
-			 }
-			 else if(dp.value instanceof Long){
-					String[] topFeat	=	new String[1];
-					topFeat[0]	=	topName+"";
-					String[] labelNames	=	new String[1];
-					labelNames[0]			=	"topology";
-					Gauge duration	=	null;
-					if(this.gauges.containsKey(metricName)){
-						duration	=	this.gauges.get(metricName);
-					}
-					else{
-						 duration = Gauge.build()
-							     .name(metricName)
-							     .help(metricName)
-							     .labelNames(labelNames)
-							     .register(registry);
-						 this.gauges.put(metricName, duration);
-					}
-					
-				 Gauge.Child gaugeChild	=	new Gauge.Child();
-				 gaugeChild.set(((Long)dp.value).doubleValue());
-				 duration.setChild(gaugeChild, topFeat);
-			 }
-			 else if(dp.value instanceof Integer){
-					String[] topFeat	=	new String[1];
-					topFeat[0]	=	topName+"";
-					String[] labelNames	=	new String[1];
-					labelNames[0]			=	"topology";
-					Gauge duration	=	null;
-					if(this.gauges.containsKey(metricName)){
-						duration	=	this.gauges.get(metricName);
-					}
-					else{
-						 duration = Gauge.build()
-							     .name(metricName)
-							     .help(metricName)
-							     .labelNames(labelNames)
-							     .register(registry);
-						 this.gauges.put(metricName, duration);
-					}
-					
-				 Gauge.Child gaugeChild	=	new Gauge.Child();
-				 gaugeChild.set(((Integer)dp.value).doubleValue());
-				 duration.setChild(gaugeChild, topFeat);
-			 }
-			 else{
-				 LOG.info("SONDA ELSEBLOCK "+dp.value.getClass());
+				 if(dp.value instanceof Double){
+						String[] topFeat	=	new String[1];
+						topFeat[0]	=	topName+"";
+						String[] labelNames	=	new String[1];
+						labelNames[0]			=	"topology";
+						Gauge duration	=	null;
+						if(this.gauges.containsKey(metricName)){
+							duration	=	this.gauges.get(metricName);
+						}
+						else{
+							 duration = Gauge.build()
+								     .name(metricName)
+								     .help(metricName)
+								     .labelNames(labelNames)
+								     .register(registry);
+							 this.gauges.put(metricName, duration);
+						}
+						
+					 
+					 Gauge.Child gaugeChild	=	new Gauge.Child();
+					 gaugeChild.set((double)dp.value);
+					 duration.setChild(gaugeChild, topFeat);
+						 LOG.info("SONDA-INSIDE-ELSE gauge name "+"storm_"+dp.name);
+				 }
+				 else if(dp.value instanceof Long){
+						String[] topFeat	=	new String[1];
+						topFeat[0]	=	topName+"";
+						String[] labelNames	=	new String[1];
+						labelNames[0]			=	"topology";
+						Gauge duration	=	null;
+						if(this.gauges.containsKey(metricName)){
+							duration	=	this.gauges.get(metricName);
+						}
+						else{
+							 duration = Gauge.build()
+								     .name(metricName)
+								     .help(metricName)
+								     .labelNames(labelNames)
+								     .register(registry);
+							 this.gauges.put(metricName, duration);
+						}
+						
+					 Gauge.Child gaugeChild	=	new Gauge.Child();
+					 gaugeChild.set(((Long)dp.value).doubleValue());
+					 duration.setChild(gaugeChild, topFeat);
+				 }
+				 else if(dp.value instanceof Integer){
+						String[] topFeat	=	new String[1];
+						topFeat[0]	=	topName+"";
+						String[] labelNames	=	new String[1];
+						labelNames[0]			=	"topology";
+						Gauge duration	=	null;
+						if(this.gauges.containsKey(metricName)){
+							duration	=	this.gauges.get(metricName);
+						}
+						else{
+							 duration = Gauge.build()
+								     .name(metricName)
+								     .help(metricName)
+								     .labelNames(labelNames)
+								     .register(registry);
+							 this.gauges.put(metricName, duration);
+						}
+						
+					 Gauge.Child gaugeChild	=	new Gauge.Child();
+					 gaugeChild.set(((Integer)dp.value).doubleValue());
+					 duration.setChild(gaugeChild, topFeat);
+				 }
+				 else{
+					 LOG.info("SONDA ELSEBLOCK "+dp.value.getClass());
+				 }
 			 }
 		 }
 
