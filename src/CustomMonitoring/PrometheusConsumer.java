@@ -34,8 +34,8 @@ import io.prometheus.client.exporter.PushGateway;
 
 public class PrometheusConsumer implements IMetricsConsumer {
     private static final Logger LOG 	= 	LoggerFactory.getLogger(PrometheusConsumer.class);
-    //private static final String PROMURL	=	"160.80.97.147:9091";
-    private static final String PROMURL	=	"10.0.0.1:9091";
+    private static final String PROMURL	=	"160.80.97.147:9091";
+    //private static final String PROMURL	=	"10.0.0.1:9091";
     HashMap<String,Gauge> gauges	=	new HashMap<String,Gauge>();
     
     //private static final CollectorRegistry registry = new CollectorRegistry(); 
@@ -108,7 +108,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 					 
 					 //TODO remove test
 					 if(metricName.equals("_storm___complete_latency_default")){
-						 this.sendEmail("trovata metrica "+metricName+" "+innerValue, "TROVATA", "paride.casulli@gmail.com");
+						 //this.sendEmail("trovata metrica "+metricName+" "+innerValue, "TROVATA", "paride.casulli@gmail.com");
 					 }
 					 //if(metricName.length()>=30){
 						// metricName	=   metricName.substring(0, 30);
@@ -153,7 +153,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 			 metricName	=	metricName.replace('-', '_');
 			 metricName	=	metricName.replace('/', '_');
 			 if(metricName.equals("_storm___complete_latency_default")){
-				 this.sendEmail("trovata metrica "+metricName+" "+dp.value, "TROVATA", "paride.casulli@gmail.com");
+				 //this.sendEmail("trovata metrica "+metricName+" "+dp.value, "TROVATA", "paride.casulli@gmail.com");
 			 }
 			 if(dp.value instanceof Double){
 					String[] topFeat	=	new String[1];
@@ -235,7 +235,7 @@ public class PrometheusConsumer implements IMetricsConsumer {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			LOG.warn("SONDA######"+e.getMessage());
-			this.sendEmail(e.getMessage(),"EXCEPTION", "paride.casulli@gmail.com");
+			//this.sendEmail(e.getMessage(),"EXCEPTION", "paride.casulli@gmail.com");
 			//e.printStackTrace();
 		}
 		LOG.info("############SONDA!!! sent to prometheus ");
