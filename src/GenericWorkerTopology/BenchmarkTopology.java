@@ -37,15 +37,15 @@ public class BenchmarkTopology {
 	   	  	intervals[11]	=	17;
 	   	  	intervals[12]	=	15;
 	   	  	intervals[13]	=	10;
-	   	  	intervals[14]	=	5;
+	   	  	intervals[14]	=	7;
 	   	  	intervals[15]	=	10;
-	   	  	intervals[16]	=	8;
+	   	  	intervals[16]	=	9;
 	   	  	intervals[17]	=	15;
 	   	  	intervals[18]	=	22;
 	   	  	intervals[19]	=	24;
 	   	  	intervals[20]	=	17;
 	   	  	intervals[21]	=	15;
-	   	  	intervals[22]	=	5;
+	   	  	intervals[22]	=	8;
 	   	  	intervals[23]	=	15;
 
 	   	  	int[] deltas1	=	new int[4];
