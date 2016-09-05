@@ -25,7 +25,7 @@ public class BenchmarkTopology {
 	   	  	int[] intervals	=	new int[24];
 	   	  	
 	   	  	for(int i=0;i<24;i++){
-	   	  		intervals[i]	=	600000;
+	   	  		intervals[i]	=	60000;
 	   	  	}
 	   	  	
 	   	  	/*
