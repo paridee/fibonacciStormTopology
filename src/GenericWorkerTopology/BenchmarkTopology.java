@@ -101,9 +101,50 @@ public class BenchmarkTopology {
 	   	  	basev3[2]			=	34;
 	   	  	basev3[3]			=	34;
 	   	  	
+	   	  	int[] deltas4	=	new int[4];
+	   	  	deltas4[0]			=	2;
+	   	  	deltas4[1]			=	2;
+	   	  	deltas4[2]			=	2;
+	   	  	deltas4[3]			=	2;
+	   	  	
+	   	  	int[] basev4		=	new int[4];
+	   	  	/*
+	   	  	basev4[0]			=	33;
+	   	  	basev4[1]			=	31;
+	   	  	basev4[2]			=	34;
+	   	  	basev4[3]			=	31;
+	   	  	*/
+	   	  	
+	   	  	basev4[0]			=	34;
+	   	  	basev4[1]			=	34;
+	   	  	basev4[2]			=	34;
+	   	  	basev4[3]			=	34;
+	   	  	
+	   	  	int[] deltas5	=	new int[4];
+	   	  	deltas5[0]			=	2;
+	   	  	deltas5[1]			=	2;
+	   	  	deltas5[2]			=	2;
+	   	  	deltas5[3]			=	2;
+	   	  	
+	   	  	int[] basev5		=	new int[4];
+	   	  	/*
+	   	  	basev5[0]			=	33;
+	   	  	basev5[1]			=	31;
+	   	  	basev5[2]			=	34;
+	   	  	basev5[3]			=	31;
+	   	  	*/
+	   	  	
+	   	  	basev5[0]			=	34;
+	   	  	basev5[1]			=	34;
+	   	  	basev5[2]			=	34;
+	   	  	basev5[3]			=	34;
+	   	  	
+	   	  	
 	   	  	DynamicIntegerGenerator gen1	=	new DynamicIntegerGenerator(basev1,deltas1);
 	   	  	DynamicIntegerGenerator gen2	=	new DynamicIntegerGenerator(basev2,deltas2);
 	   	  	DynamicIntegerGenerator gen3	=	new DynamicIntegerGenerator(basev3,deltas3);
+	   	  	DynamicIntegerGenerator gen4	=	new DynamicIntegerGenerator(basev4,deltas4);
+	   	  	DynamicIntegerGenerator gen5	=	new DynamicIntegerGenerator(basev5,deltas5);
 	   	  	builder.setSpout("spout", new WorkTimeDynamicSpout(intervals,gen1), 1);
 	    
 	    if (args != null && args.length > 1) {
@@ -112,7 +153,9 @@ public class BenchmarkTopology {
 
   		    builder.setBolt("firststage", new IntermediateWorker(gen2), 1).shuffleGrouping("spout").setNumTasks(32);
   		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 1).shuffleGrouping("firststage").setNumTasks(32);
-  		    builder.setBolt("thirdstage", new FinalWorker(), 1).shuffleGrouping("secondstage").setNumTasks(32);
+  		    builder.setBolt("thirdstage", new IntermediateWorker(gen4), 1).allGrouping("secondstage").setNumTasks(32);
+  		  builder.setBolt("thirdstagebis", new IntermediateWorker(gen5), 1).allGrouping("secondstage").setNumTasks(32);
+  		    builder.setBolt("fourthstage", new FinalWorker(), 1).globalGrouping("thirdstage").globalGrouping("thirdstagebis").setNumTasks(32);
   	   	  	StormSubmitter.submitTopology(args[0]+"", conf, builder.createTopology());
 	    }
 	    else {
