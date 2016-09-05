@@ -23,6 +23,12 @@ public class BenchmarkTopology {
 	    conf.registerMetricsConsumer(PrometheusConsumer.class,1);
 	    
 	   	  	int[] intervals	=	new int[24];
+	   	  	
+	   	  	for(int i=0;i<24;i++){
+	   	  		intervals[i]	=	15;
+	   	  	}
+	   	  	
+	   	  	/*
 	   	  	intervals[0]	=	30;
 	   	  	intervals[1]	=	32;
 	   	  	intervals[2]	=	35;
@@ -46,7 +52,7 @@ public class BenchmarkTopology {
 	   	  	intervals[20]	=	17;
 	   	  	intervals[21]	=	15;
 	   	  	intervals[22]	=	8;
-	   	  	intervals[23]	=	15;
+	   	  	intervals[23]	=	15;*/
 
 	   	  	int[] deltas1	=	new int[4];
 	   	  	deltas1[0]			=	2;
