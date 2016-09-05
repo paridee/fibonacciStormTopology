@@ -196,13 +196,13 @@ public class BenchmarkTopology {
   	   	  	conf.setNumWorkers(1);
   	   	  	conf.setMaxSpoutPending(5000);
 
-  		    builder.setBolt("firststage", new IntermediateWorker(gen2), 1).shuffleGrouping("spout").setNumTasks(32);
-  		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 1).shuffleGrouping("firststage").setNumTasks(32);
-  		    builder.setBolt("thirdstage", new IntermediateWorker(gen4), 1).shuffleGrouping("secondstage").setNumTasks(32);
-  		    builder.setBolt("thirdstagebis", new IntermediateWorker(gen5), 1).shuffleGrouping("secondstage").setNumTasks(32);
-  		    builder.setBolt("fourthstage", new IntermediateWorker(gen6), 1).shuffleGrouping("thirdstagebis").setNumTasks(32);
-		    builder.setBolt("fourthstagebis", new IntermediateWorker(gen7), 1).shuffleGrouping("thirdstagebis").setNumTasks(32); 
-  		    builder.setBolt("fifthstage", new FinalWorker(), 1).shuffleGrouping("thirdstage").shuffleGrouping("fourthstage").shuffleGrouping("fourthstagebis").setNumTasks(32);
+  		    builder.setBolt("firststage", new IntermediateWorker(gen2), 8).shuffleGrouping("spout").setNumTasks(32);
+  		    builder.setBolt("secondstage", new IntermediateWorker(gen3), 8).shuffleGrouping("firststage").setNumTasks(32);
+  		    builder.setBolt("thirdstage", new IntermediateWorker(gen4), 8).shuffleGrouping("secondstage").setNumTasks(32);
+  		    builder.setBolt("thirdstagebis", new IntermediateWorker(gen5), 8).shuffleGrouping("secondstage").setNumTasks(32);
+  		    builder.setBolt("fourthstage", new IntermediateWorker(gen6), 8).shuffleGrouping("thirdstagebis").setNumTasks(32);
+		    builder.setBolt("fourthstagebis", new IntermediateWorker(gen7), 8).shuffleGrouping("thirdstagebis").setNumTasks(32); 
+  		    builder.setBolt("fifthstage", new FinalWorker(), 8).shuffleGrouping("thirdstage").shuffleGrouping("fourthstage").shuffleGrouping("fourthstagebis").setNumTasks(32);
   	   	  	StormSubmitter.submitTopology(args[0]+"", conf, builder.createTopology());
 	    }
 	    else {
