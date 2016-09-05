@@ -102,10 +102,10 @@ public class BenchmarkTopology {
 	   	  	basev3[3]			=	31;
 	   	  	*/
 	   	  	
-	   	  	basev3[0]			=	34;
-	   	  	basev3[1]			=	34;
-	   	  	basev3[2]			=	34;
-	   	  	basev3[3]			=	34;
+	   	  	basev3[0]			=	32;
+	   	  	basev3[1]			=	32;
+	   	  	basev3[2]			=	32;
+	   	  	basev3[3]			=	32;
 	   	  	
 	   	  	int[] deltas4	=	new int[4];
 	   	  	deltas4[0]			=	2;
@@ -140,10 +140,10 @@ public class BenchmarkTopology {
 	   	  	basev5[3]			=	31;
 	   	  	*/
 	   	  	
-	   	  	basev5[0]			=	30;
-	   	  	basev5[1]			=	30;
-	   	  	basev5[2]			=	30;
-	   	  	basev5[3]			=	30;
+	   	  	basev5[0]			=	29;
+	   	  	basev5[1]			=	29;
+	   	  	basev5[2]			=	29;
+	   	  	basev5[3]			=	29;
 	   	  	
 	   	  	int[] deltas6	=	new int[4];
 	   	  	deltas6[0]			=	2;
@@ -178,10 +178,10 @@ public class BenchmarkTopology {
 	   	  	basev7[3]			=	31;
 	   	  	*/
 	   	  	
-	   	  	basev7[0]			=	29;
-	   	  	basev7[1]			=	29;
-	   	  	basev7[2]			=	29;
-	   	  	basev7[3]			=	29;
+	   	  	basev7[0]			=	33;
+	   	  	basev7[1]			=	33;
+	   	  	basev7[2]			=	33;
+	   	  	basev7[3]			=	33;
 	   	  	
 	   	  	DynamicIntegerGenerator gen1	=	new DynamicIntegerGenerator(basev1,deltas1);
 	   	  	DynamicIntegerGenerator gen2	=	new DynamicIntegerGenerator(basev2,deltas2);
