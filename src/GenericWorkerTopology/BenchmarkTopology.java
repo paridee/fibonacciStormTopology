@@ -25,7 +25,7 @@ public class BenchmarkTopology {
 	   	  	int[] intervals	=	new int[24];
 	   	  	
 	   	  	for(int i=0;i<24;i++){
-	   	  		intervals[i]	=	8; //su pc adriano 30
+	   	  		intervals[i]	=	20; //su pc adriano 30
 	   	  	}
 	   	  	
 	   	  	/*
