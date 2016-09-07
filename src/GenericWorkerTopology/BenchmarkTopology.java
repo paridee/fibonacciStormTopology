@@ -193,7 +193,7 @@ public class BenchmarkTopology {
 	   	  	builder.setSpout("spout", new WorkTimeDynamicSpout(intervals,gen1), 1);
 	    
 	    if (args != null && args.length > 1) {
-  	   	  	conf.setNumWorkers(1);
+  	   	  	conf.setNumWorkers(8);
   	   	  	conf.setMaxSpoutPending(5000);
 
   		    builder.setBolt("firststage", new IntermediateWorker(gen2), 8).shuffleGrouping("spout").setNumTasks(32);
